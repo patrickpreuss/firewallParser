@@ -24,6 +24,8 @@
 package firewallparser;
 
 import java.util.Scanner;
+import java.util.StringTokenizer;
+
 
 /**
  * Takes in a string, where the string contains delimiter-separated values. 
@@ -37,8 +39,10 @@ public class DsvParser {
   private final String parseData;
   private final String delimeter; 
   static String[][] myArray;
+  int col = 0;
+  int row = 0;
   
-  // constructor
+// constructor
   /**
    * 
    * @param Data      the string data that needs parsing.
@@ -47,16 +51,39 @@ public class DsvParser {
   public DsvParser(String Data, String Character){
       parseData = Data;
       delimeter = Character;
+      
+      try{
+        Scanner myScanner = new Scanner(parseData);
+        /* Count the number of delimiters in the first line. This will give us 
+         * the number of columns the array needs. Then count all the rows that
+         * aren't empty and make that the number of rows the array needs.
+         */
+        
+        String line = myScanner.nextLine();
+        col += new StringTokenizer(line, "|").countTokens();
+
+        while (myScanner.hasNextLine()){
+          if (myScanner.nextLine().matches(".*(ga|tx).*")){
+            row++;
+            //System.out.println(myScanner)
+          }
+        }
+        myScanner.close();
+
+      } catch(Exception e){
+        System.out.println(e); // Debug
+      }
+      //System.out.println("Col" + col); // Debug
+      //System.out.println("Row" + row); // Debug
+  
   }
   // methods
 
   public String[][] setUpMyArray(){
-    myArray = new String[33][9];
+    myArray = new String[row][col];
     Scanner scanIn;
     int rowCount = 0;
-    int Row = 0;
     int colCount = 0;
-    int Col = 0;
 
     System.out.println("\n ****** Setup Array ******"); // Debug
 
@@ -67,17 +94,20 @@ public class DsvParser {
       
       while (scanIn.hasNextLine()){
         // split the inputline into an array at the char
-          String[] tempArray = scanIn.nextLine().split("\\|");
-        // copy the content of the inArray to the myArray
-        for (colCount = 0; colCount < tempArray.length; colCount++){
+        String[] tempArray = scanIn.nextLine().split("\\|");
+        // Copy this tempArray into myArray if the first element is a GA or TX
+        // hostname.
+        if (tempArray[0].matches(".*(ga|tx).*")){
+          for (colCount = 0; colCount < tempArray.length; colCount++){
             myArray[rowCount][colCount] = tempArray[colCount];
+          }
+          // Increment the row in the array
+          rowCount++;
         }
-        // Increment the row in the array
-        rowCount++;
       }
-    
+    scanIn.close();
     } catch (Exception e){
-        System.out.println(e); // Debug
+        //System.out.println(e); // Debug
       }
 
     return myArray;

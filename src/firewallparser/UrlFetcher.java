@@ -25,6 +25,7 @@ package firewallparser;
 import java.net.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+//import org.apache.commons.io.IOUtils; // Used but not imported
 
 /**
  *<h1> Parse Digital Life Firewall URL</h1>
@@ -39,7 +40,7 @@ import java.io.InputStreamReader;
  * 
  * @author Zachary Norris <zn924a@att.com><znorris@gmail.com>
  */
-public class UrlParser {
+public class UrlFetcher {
 
   // attributes or fields
   private final String inputUrl;
@@ -47,7 +48,7 @@ public class UrlParser {
   /**
    * @param   url an absolute URL that returns the current firewall metrics.
    */
-  public UrlParser (String url) {
+  public UrlFetcher (String url) {
     inputUrl = url;
   }
 
@@ -60,7 +61,6 @@ public class UrlParser {
     URL oracle = new URL(inputUrl);
     BufferedReader in = new BufferedReader(
         new InputStreamReader(oracle.openStream()));
-
     return org.apache.commons.io.IOUtils.toString(in);
   }
 }

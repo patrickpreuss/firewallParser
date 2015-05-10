@@ -32,15 +32,12 @@ import java.util.Arrays;
 public class FirewallUpdater {
   static final String url = "https://elmdashboard.web.att.com/cgi-bin/reports/diglife.php?q=metrics";
 
-  public static void main(String[] args) throws Exception {
-    // Grab url https://elmdashboard.web.att.com/cgi-bin/reports/diglife.php?q=metrics
-    // parse data into array of arrays
-    // place into DB?
+  public static void main(String[] args) throws Exception {  
+    // Create UrlFetcher Object
+    UrlFetcher Fetched = new UrlFetcher(url);
+    // Turn firewall web page into a 2D array
+    DsvParser firewallDsv = new DsvParser(Fetched.getUrlSource(), "|");
     
-    // Create UrlParser Object
-    UrlParser Parser = new UrlParser(url);
-
-    DsvParser dsv = new DsvParser(Parser.getUrlSource(), "|");
-    System.out.println(Arrays.deepToString(dsv.setUpMyArray()));
+  System.out.println(Arrays.deepToString(firewallDsv.setUpMyArray())); // Debug
   }
 }
